@@ -16,7 +16,7 @@ pub fn configure() {
         .to_str()
         .unwrap()
         .to_string();
-    let mut default_openai_key = "User".to_string();
+    let mut default_openai_key = "openai-key".to_string();
 
     // Check if config file exists and read values
     match fs::read_to_string(&config_path) {

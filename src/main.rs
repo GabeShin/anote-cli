@@ -6,7 +6,7 @@ fn main() {
 
     match args.get(1).map(String::as_str) {
         Some("create") => {
-            create::open_vim_editor();
+            create::create_note();
         }
         Some("configure") => {
             config::configure();
