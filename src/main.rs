@@ -1,5 +1,6 @@
 mod config;
 mod create;
+mod utils;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();

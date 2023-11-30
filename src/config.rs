@@ -1,55 +1,30 @@
-use std::{fs, io::ErrorKind, path::PathBuf};
-
+use crate::utils::parse_config;
 use dialoguer::{Confirm, Input};
+use std::fs;
 
 pub fn configure() {
-    // Path to the config file
-    let mut config_path = PathBuf::new();
-    config_path = config_path
-        .join(dirs::home_dir().unwrap_or_else(|| PathBuf::from(".")))
-        .join(".anote-config");
+    // Fetch the configuration for the save path
+    let config_result = parse_config();
 
-    // Initialize default values
-    let mut default_save_path = dirs::home_dir()
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join("anote")
-        .to_str()
-        .unwrap()
-        .to_string();
-    let mut default_openai_key = "openai-key".to_string();
-
-    // Check if config file exists and read values
-    match fs::read_to_string(&config_path) {
-        Ok(contents) => {
-            for line in contents.lines() {
-                let parts: Vec<&str> = line.split('=').collect();
-                if parts.len() == 2 {
-                    match parts[0] {
-                        "save_path" => default_save_path = parts[1].to_string(),
-                        "openai_key" => default_openai_key = parts[1].to_string(),
-                        _ => {}
-                    }
-                }
-            }
+    // Initialize default values or use values from config
+    let (save_path, openai_key, config_path) = match config_result {
+        Ok(config) => (config.save_path, config.openai_key, config.config_path),
+        Err(e) => {
+            panic!("Error reading config file: {}", e);
         }
-        Err(e) if e.kind() != ErrorKind::NotFound => {
-            eprintln!("Error reading config file: {}", e);
-            return;
-        }
-        _ => {}
-    }
+    };
 
     // Prompt for save path
     let save_path: String = Input::new()
         .with_prompt("Enter the save path for notes")
-        .default(default_save_path.clone())
+        .default(save_path.clone())
         .interact_text()
         .unwrap();
 
     // Prompt for OpenAI key
     let openai_key: String = Input::new()
         .with_prompt("Enter OpenAI Key")
-        .default(default_openai_key.clone())
+        .default(openai_key.clone())
         .interact_text()
         .unwrap();
 

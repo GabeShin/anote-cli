@@ -1,35 +1,22 @@
+use crate::utils::parse_config;
 use chrono::Local;
 use dialoguer::Input;
 use std::{fs, path::PathBuf, process::Command};
 
 pub fn create_note() {
     // Fetch the configuration for the save path
-    let mut config_path = PathBuf::new();
-    config_path = config_path
-        .join(dirs::home_dir().unwrap_or_else(|| PathBuf::from(".")))
-        .join(".anote-config");
+    let config_result = parse_config();
 
-    let config =
-        std::fs::read_to_string(config_path).unwrap_or_else(|_| "save_path=~/anote\n".to_string());
-
-    let save_path = config
-        .lines()
-        .find(|line| line.starts_with("save_path="))
-        .unwrap_or("save_path=~/meetingnotes")
-        .replace("save_path=", "")
-        .trim()
-        .to_string();
-
-    // Expand '~' to the home directory
-    let expanded_path = if save_path.starts_with("~") {
-        dirs::home_dir()
-            .unwrap_or_else(|| PathBuf::from("."))
-            .join(&save_path[2..])
-    } else {
-        PathBuf::from(&save_path)
+    // Initialize default values or use values from config
+    let save_path = match config_result {
+        Ok(config) => config.save_path,
+        Err(e) => {
+            panic!("Error reading config file: {}", e);
+        }
     };
 
     // Create directory if it doesn't exist
+    let expanded_path = PathBuf::from(&save_path);
     if !expanded_path.exists() {
         fs::create_dir_all(&expanded_path).unwrap_or_else(|e| {
             panic!("Failed to create directory: {}", e);
