@@ -1,5 +1,6 @@
 mod config;
 mod create;
+mod list;
 mod utils;
 
 fn main() {
@@ -11,6 +12,9 @@ fn main() {
         }
         Some("configure") => {
             config::configure();
+        }
+        Some("list") => {
+            list::list_notes();
         }
         Some("help") => {
             println!("Usage: anote <command>");
