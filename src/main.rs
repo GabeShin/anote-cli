@@ -2,21 +2,27 @@ mod config;
 mod create;
 mod list;
 mod utils;
+use clap::Parser;
+
+#[derive(Parser)]
+struct Cli {
+    command: String,
+}
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
+    let args = Cli::parse();
 
-    match args.get(1).map(String::as_str) {
-        Some("create") => {
+    match args.command.as_str() {
+        "create" => {
             create::create_note();
         }
-        Some("configure") => {
+        "configure" => {
             config::configure();
         }
-        Some("list") => {
+        "list" => {
             list::list_notes();
         }
-        Some("help") => {
+        "help" => {
             println!("Usage: anote <command>");
             println!("Commands:");
             println!("  create     Create a new note");
