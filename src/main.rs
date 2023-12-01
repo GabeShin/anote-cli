@@ -3,6 +3,7 @@ mod create;
 mod list;
 mod utils;
 use clap::Parser;
+mod spinner;
 mod summarize;
 
 #[derive(Parser)]

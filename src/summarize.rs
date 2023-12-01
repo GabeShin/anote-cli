@@ -1,7 +1,12 @@
+use crate::spinner::Spinner;
 use crate::utils::{parse_config, run_command};
 use std::{fs, path::PathBuf, process::Command};
 
 pub fn summarize(full_path: PathBuf) {
+    // Start the spinner
+    let mut spinner = Spinner::start();
+
+    // Fetch the configuration for the save path
     let config_result = parse_config();
     let save_path = match config_result {
         Ok(config) => config.save_path,
@@ -38,6 +43,9 @@ pub fn summarize(full_path: PathBuf) {
 
     // Save the summary to the file
     fs::write(&summary_file_path, &summary).expect("Failed to write the summary file");
+
+    // Stop the spinner
+    spinner.stop();
 
     // Open the Markdown file with a default application or editor
     if let Err(e) = Command::new("vim")
