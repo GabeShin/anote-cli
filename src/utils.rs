@@ -1,6 +1,7 @@
 use std::fs;
 use std::io::{ErrorKind, Result};
 use std::path::PathBuf;
+use std::process::{Command, Output};
 
 pub fn parse_config() -> Result<Config> {
     let config_path = dirs::home_dir()
@@ -51,3 +52,6 @@ pub struct Config {
     pub config_path: String,
 }
 
+pub fn run_command(command: &str) -> Result<Output> {
+    Command::new("sh").arg("-c").arg(command).output()
+}

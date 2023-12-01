@@ -1,3 +1,4 @@
+use crate::summarize::summarize;
 use crate::utils::parse_config;
 use chrono::Local;
 use dialoguer::Input;
@@ -49,4 +50,8 @@ pub fn create_note() {
         Ok(_) => println!("Note saved."),
         Err(e) => println!("Failed to open Vim: {}", e),
     }
+
+    let path_clone = full_path.clone();
+
+    summarize(path_clone);
 }

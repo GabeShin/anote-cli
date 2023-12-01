@@ -3,6 +3,7 @@ mod create;
 mod list;
 mod utils;
 use clap::Parser;
+mod summarize;
 
 #[derive(Parser)]
 struct Cli {
