@@ -1,7 +1,7 @@
 [package]
 name = "anote"
 version = "0.1.0"
-edition = "2023"
+edition = "2021"
 author = ["Gabe Shin <gabeshin.ts@gmail.com>"]
 license = "MIT"
 description = "CLI Note taking tool that utilize Ollama library to summarize the note"
